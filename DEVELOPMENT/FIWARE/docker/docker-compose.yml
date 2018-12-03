@@ -1,0 +1,111 @@
+version: '2'
+services:
+    mosquitto:
+      image: eclipse-mosquitto:1.4.12
+      hostname: mosquitto
+      container_name: mosquitto
+      restart: always
+      ports:
+       - "1883:1883"
+       - "9001:9001"
+      volumes:
+       - /home/ids/DEVELOPMENT/FIWARE/mosquitto/config:/mosquitto/config
+       #- /home/ids/DEVELOPMENT/FIWARE/mosquitto/log:/mosquitto/log
+      networks:
+        ids_connector_network:
+          ipv4_address: 172.18.2.4
+    pepIn:
+      restart: always
+      image: fiware/pep-proxy
+      container_name: pepIn
+      hostname: pepIn
+      volumes:
+        - /home/ids/DEVELOPMENT/FIWARE/pepIn/config.js:/opt/fiware-pep-proxy/config.js
+      ports:
+        - "1027:1027"
+      links:
+        - fiware-idm
+      networks:
+        ids_connector_network:
+          ipv4_address: 172.18.2.2
+        idm_network:
+          ipv4_address: 172.18.1.7
+    iotAgent:
+      restart: always
+      image: fiware/iotagent-mqtt
+      container_name: iotAgent
+      hostname: iotAgent
+      volumes:
+        - /home/ids/DEVELOPMENT/FIWARE/iotAgent/config.js:/opt/iota-mqtt/config.js
+      ports:
+       - "4041:4041"
+      links:
+       - mongo
+       - orion
+      networks:
+        ids_connector_network:
+          ipv4_address: 172.18.2.3
+    mongo:
+      restart: always
+      image: mongo:3.4
+      container_name: mongo
+      hostname: mongo
+      volumes:
+        - /home/ids/DEVELOPMENT/FIWARE/mongodb/data:/data/db
+      command: --nojournal
+      networks:
+        ids_connector_network:
+          ipv4_address: 172.18.2.6
+    orion:
+      restart: always
+      image: fiware/orion
+      container_name: orion
+      hostname: orion
+      links:
+       - mongo
+      ports:
+       - "1026:1026"
+      command: -dbhost mongo
+      networks:
+        ids_connector_network:
+          ipv4_address: 172.18.2.5
+    mysql:
+      image: mysql/mysql-server:5.7.21
+      container_name: mysql
+      hostname: mysql
+      ports:
+        - "3306:3306"
+      volumes:
+        - /home/ids/DEVELOPMENT/FIWARE/mysql:/var/lib/mysql
+      environment:
+        - MYSQL_ROOT_PASSWORD=idm
+        - MYSQL_ROOT_HOST=172.18.1.6
+      networks:
+        idm_network:
+          ipv4_address: 172.18.1.5
+    fiware-idm:
+      image: fiware/idm
+      container_name: idm
+      hostname: idm
+      ports:
+       - "3000:3000"
+       - "443:443"
+      networks:
+        idm_network:
+          ipv4_address: 172.18.1.6
+      environment:
+       - DATABASE_HOST=mysql
+networks:
+  idm_network:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.18.1.0/24
+         gateway: 172.18.1.1
+  ids_connector_network:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.18.2.0/24
+         gateway: 172.18.2.1
+
