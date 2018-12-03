@@ -25,6 +25,8 @@ services:
         - "1027:1027"
       links:
         - fiware-idm
+      depends_on:
+        - fiware-idm
       networks:
         ids_connector_network:
           ipv4_address: 172.18.2.2
