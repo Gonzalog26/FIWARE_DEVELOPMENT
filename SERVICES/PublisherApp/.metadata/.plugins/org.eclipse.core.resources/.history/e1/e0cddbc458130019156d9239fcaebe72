@@ -1,0 +1,183 @@
+package ids.publisherApp.server;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.gson.Gson;
+
+import es.tekniker.eefrmwrk.config.ConfigFile;
+import ids.publisherApp.subscriptionModel.Body;
+import ids.publisherApp.subscriptionModel.Entity;
+import ids.publisherApp.subscriptionModel.HttpCustom;
+import ids.publisherApp.subscriptionModel.Notification;
+import ids.publisherApp.subscriptionModel.Subject;
+
+public class Subscriber {
+	
+	private static final Log log = LogFactory.getLog(Subscriber.class);
+	
+	ConfigFile configFile;
+	String filePath="Subscription.properties";
+	
+	private String contextBrokerIP;
+	private String contextBrokerPort;
+	private String subscriptionUrl;
+	private String fiwareService;
+	private String fiwareServicePath;
+	private String subscriptionDescription;
+	private String subscriptionIdPattern;
+	private String subscriptionDuration;
+	private String subscriptionNotificationUrl;
+	
+	public Subscriber(){
+		
+		log.debug("Getting configuration parameters from configFile");
+		
+		try {
+			configFile = new ConfigFile(filePath);
+			
+			contextBrokerIP = configFile.getStringParam("contextBroker.ip");
+			
+			if(contextBrokerIP==null || contextBrokerIP.isEmpty()){
+				contextBrokerIP="localhost";
+				log.warn("No entry found for 'contextBroker.ip' in configure file. "+contextBrokerIP+"set by default");
+			}
+			
+			contextBrokerPort = configFile.getStringParam("contextBroker.port");
+			
+			if(contextBrokerPort==null || contextBrokerPort.isEmpty()){
+				contextBrokerPort="1026";
+				log.warn("No entry found for 'contextBroker.port' in configure file. "+contextBrokerPort+"set by default");
+			}			
+			
+			subscriptionUrl = "http://"+contextBrokerIP+":"+contextBrokerPort+"/v2/subscriptions";
+			log.debug("Subscription url: "+subscriptionUrl);
+			
+			fiwareService = configFile.getStringParam("fiware.service");
+			
+			if(fiwareService==null || fiwareService.isEmpty()){
+				fiwareService="service";
+				log.warn("No entry found for 'fiware.service' in configure file. "+fiwareService+"set by default");
+			}
+			
+			log.debug("Fiware Service: "+fiwareService);
+			fiwareServicePath = configFile.getStringParam("fiware.servicePath");
+			
+			if(fiwareServicePath==null || fiwareServicePath.isEmpty()){
+				fiwareServicePath="fiwareServicePath";
+				log.warn("No entry found for 'fiware.servicePath' in configure file. "+fiwareServicePath+"set by default");
+			}			
+			
+			log.debug("FiwareServicePath: "+fiwareServicePath);
+			
+			subscriptionDescription = configFile.getStringParam("subscription.description");
+			
+			if(subscriptionDescription==null || subscriptionDescription.isEmpty()){
+				subscriptionDescription="none";
+				log.warn("No entry found for 'subscription.description' in configure file. "+subscriptionDescription+"set by default");
+			}
+			
+			log.debug("Subscription description: "+subscriptionDescription);
+			subscriptionIdPattern = configFile.getStringParam("subscription.idPattern");
+			
+			if(subscriptionIdPattern==null || subscriptionIdPattern.isEmpty()){
+				subscriptionIdPattern=".*";
+				log.warn("No entry found for 'subscription.idPattern' in configure file. "+subscriptionIdPattern+"set by default");
+			}			
+			
+			log.debug("Subscription IdPattern: "+subscriptionIdPattern);
+			subscriptionDuration = configFile.getStringParam("subscription.duration");
+			
+			if(subscriptionDuration==null || subscriptionDuration.isEmpty()){
+				subscriptionDuration="P36M";
+				log.warn("No entry found for 'subscription.duration' in configure file. "+subscriptionDuration+"set by default");
+			}
+			
+			log.debug("Subscription duration: "+subscriptionDuration);
+			subscriptionNotificationUrl = configFile.getStringParam("subscription.notificationUrl");
+			
+			if(subscriptionNotificationUrl==null || subscriptionNotificationUrl.isEmpty()){
+				subscriptionNotificationUrl=".*";
+				log.warn("No entry found for 'subscription.notificationUrl' in configure file. "+subscriptionNotificationUrl+"set by default");
+			}			
+			
+			log.debug("Subscription notificationUrl: "+subscriptionNotificationUrl);
+			
+			log.debug("Config params set!");		
+			
+			
+		} catch (IOException e) {
+			log.error("Error while getting config params");
+		}		
+		
+	}
+	
+	public boolean subscribe(){
+
+		boolean succeed = false;
+		
+		String body = setSubscriptionBody();
+		
+		HttpClient httpClient = new DefaultHttpClient();
+
+		try {
+			HttpPost post = new HttpPost(subscriptionUrl);
+			post.addHeader("Fiware-Service", fiwareService);
+		    post.addHeader("Fiware-ServicePath",fiwareServicePath);
+			post.setEntity(new StringEntity(body.toString(), ContentType.APPLICATION_JSON));
+		    HttpResponse response = httpClient.execute(post);
+
+		    log.debug("Response: "+response.hashCode());
+		}catch (Exception ex) {
+		    // handle exception here
+		} finally {
+		    httpClient.getConnectionManager().shutdown();
+		}
+		
+		return succeed;
+		
+	}
+	
+	public String setSubscriptionBody(){
+		
+		String jsonBody;
+		  
+		Body body = new Body();
+		body.setDescription(subscriptionDescription);
+		
+		Entity entity = new Entity();
+		entity.setIdPattern(subscriptionIdPattern);
+		ArrayList<Entity> entities = new ArrayList<Entity>();
+		entities.add(entity);
+		Subject subject = new Subject();
+		subject.setEntities(entities);	
+		body.setSubject(subject);
+		
+		body.setDuration(subscriptionDuration);
+		
+		HttpCustom httpCustom = new HttpCustom();
+		httpCustom.setUrl(subscriptionNotificationUrl);
+		Notification notification = new Notification();
+		notification.setHttpCustom(httpCustom);
+		body.setNotification(notification);
+		
+		Gson gson = new Gson();
+	    jsonBody = gson.toJson(body);
+	    System.out.println(body.toString());
+		
+		log.debug("Body message: "+jsonBody);
+		
+		return jsonBody;
+		
+	}
+
+}

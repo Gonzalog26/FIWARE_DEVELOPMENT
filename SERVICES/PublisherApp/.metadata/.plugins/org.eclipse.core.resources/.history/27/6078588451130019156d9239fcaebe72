@@ -1,0 +1,8 @@
+contextBroker.ip=172.18.2.4
+contextBroker.port=1026
+fiware.service=temperature
+fiware.servicePath=/temperature
+subscription.description=The demo subscription to get info
+subscription.idPattern=.*
+subscription.duration=P36M
+subscription.notificationUrl=http://172.18.2.7:8080/ids.publisherApp.rest/PublisherApp/publishMessage

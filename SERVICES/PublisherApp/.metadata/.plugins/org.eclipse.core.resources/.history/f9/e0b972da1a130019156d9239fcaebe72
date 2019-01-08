@@ -1,0 +1,37 @@
+package ids.publisherApp.rest;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+@Path("")
+@Produces("application/json")
+public class PublisherAppMaganerRestImpl {
+
+	public final static String MEDIATYPE_JSON="application/json";		
+	
+	
+	private static Log log =LogFactory.getLog(PublisherAppMaganerRestImpl.class);
+	
+	public PublisherAppMaganerRestImpl() {
+		
+	}
+	
+	@POST
+	@Consumes("text/plain")
+	@Path("/publishMessage/")
+	public Response publishMessage(String messageEntity)  {
+		
+		Response response = null;
+		
+		log.debug("Message received: "+messageEntity);		
+		
+		return response;
+	}
+	
+}

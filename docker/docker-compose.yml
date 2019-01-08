@@ -1,5 +1,21 @@
 version: '2'
 services:
+    tomcat:
+      image: tomcat:8.5.33
+      hostname: tomcat
+      container_name: tomcat
+      restart: always
+      ports:
+       - "8080:8080"
+      expose:
+       - "8080"
+      volumes:
+       - /home/ids/FIWARE_DEVELOPMENT/tomcat/conf:/usr/local/tomcat/conf
+       - /home/ids/FIWARE_DEVELOPMENT/tomcat/webapps/:/usr/local/tomcat/webapps
+       - /home/ids/FIWARE_DEVELOPMENT/tomcat/logs/:/usr/local/tomcat/logs
+      networks:
+        ids_connector_network:
+          ipv4_address: 172.18.2.7
     mosquitto:
       image: eclipse-mosquitto:1.4.12
       hostname: mosquitto
@@ -7,13 +23,13 @@ services:
       restart: always
       ports:
        - "1883:1883"
-       - "9001:9001"
+       #- "9001:9001"
       volumes:
        - /home/ids/FIWARE_DEVELOPMENT/mosquitto/config:/mosquitto/config
-       #- /home/ids/DEVELOPMENT/FIWARE/mosquitto/log:/mosquitto/log
+       - /home/ids/FIWARE_DEVELOPMENT/FIWARE/mosquitto/log:/mosquitto/log
       networks:
         ids_connector_network:
-          ipv4_address: 172.18.2.4
+          ipv4_address: 172.18.2.2
     pepIn:
       restart: always
       image: fiware/pep-proxy
@@ -21,17 +37,17 @@ services:
       hostname: pepIn
       volumes:
         - /home/ids/FIWARE_DEVELOPMENT/pepIn/config.js:/opt/fiware-pep-proxy/config.js
-      ports:
-        - "1027:1027"
-      links:
-        - fiware-idm
+      #ports:
+        #- "1027:1027"
+      #links:
+        #- fiware-idm
       depends_on:
         - fiware-idm
       networks:
         ids_connector_network:
-          ipv4_address: 172.18.2.2
+          ipv4_address: 172.18.2.5
         idm_network:
-          ipv4_address: 172.18.1.7
+          ipv4_address: 172.18.1.4
     iotAgent:
       restart: always
       image: fiware/iotagent-mqtt
@@ -42,18 +58,21 @@ services:
       ports:
        - "4041:4041"
       links:
-       - mongo
-       - orion
+       #- mongo
+       #- orion
+       - fiware-idm
       networks:
         ids_connector_network:
           ipv4_address: 172.18.2.3
+        idm_network:
+          ipv4_address: 172.18.1.7
     mongo:
       restart: always
       image: mongo:3.4
       container_name: mongo
       hostname: mongo
-      volumes:
-        - /home/ids/FIWARE_DEVELOPMENT/mongodb/data:/data/db
+      #volumes:
+        #- /home/ids/FIWARE_DEVELOPMENT/mongodb/data:/data/db
       command: --nojournal
       networks:
         ids_connector_network:
@@ -63,14 +82,14 @@ services:
       image: fiware/orion
       container_name: orion
       hostname: orion
-      links:
-       - mongo
+      #links:
+       #- mongo
       ports:
        - "1026:1026"
-      command: -dbhost mongo
+      command: -dbhost 172.18.2.6
       networks:
         ids_connector_network:
-          ipv4_address: 172.18.2.5
+          ipv4_address: 172.18.2.4
     mysql:
       image: mysql/mysql-server:5.7.21
       container_name: mysql
@@ -96,18 +115,19 @@ services:
         idm_network:
           ipv4_address: 172.18.1.6
       environment:
-       - DATABASE_HOST=mysql
+       - DATABASE_HOST=172.18.1.5
 networks:
-  idm_network:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: 172.18.1.0/24
-         gateway: 172.18.1.1
-  ids_connector_network:
+ ids_connector_network:
     driver: bridge
     ipam:
      config:
        - subnet: 172.18.2.0/24
          gateway: 172.18.2.1
+ idm_network:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.18.1.0/24
+         gateway: 172.18.1.1
+
 

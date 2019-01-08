@@ -1,0 +1,58 @@
+package ids.publisherApp.server;
+
+import java.io.IOException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import es.tekniker.eefrmwrk.config.ConfigFile;
+
+public class Subscriber {
+	
+	private static final Log log = LogFactory.getLog(Subscriber.class);
+	
+	ConfigFile configFile;
+	String filePath="Subscription.properties";
+	
+	private String contextBrokerIP;
+	private String contextBrokerPort;
+	private String fiwareService;
+	private String fiwareServicePath;
+	private String subscriptionDescription;
+	private String subscriptionIdPatter;
+	private String subscriptionDuration;
+	private String subscriptionUrl;
+	
+	public Subscriber(){
+		
+		log.debug("Getting configuration parameters from configFile");
+		
+		try {
+			configFile = new ConfigFile(filePath);
+			
+			contextBrokerIP = configFile.getStringParam("contextBroker.ip");
+			
+			if(contextBrokerIP==null || contextBrokerIP.isEmpty()){
+				contextBrokerIP="localhost";
+				log.warn("No entry found for 'contextBroker.ip' in configure file. "+contextBrokerIP+"set by default");
+			}
+			
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		
+	}
+	
+	public boolean subscribe(){
+		
+		boolean succeed = false;
+		
+		
+		
+		return succeed;
+		
+	}
+
+}

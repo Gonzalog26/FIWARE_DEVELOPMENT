@@ -1,0 +1,6 @@
+package ids.publisherApp.server;
+
+public class Notification {
+
+	private String 
+}

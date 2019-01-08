@@ -1,0 +1,119 @@
+package ids.publisherApp.server;
+
+import java.io.IOException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import es.tekniker.eefrmwrk.config.ConfigFile;
+
+public class Subscriber {
+	
+	private static final Log log = LogFactory.getLog(Subscriber.class);
+	
+	ConfigFile configFile;
+	String filePath="Subscription.properties";
+	
+	private String contextBrokerIP;
+	private String contextBrokerPort;
+	private String subscriptionUrl;
+	private String fiwareService;
+	private String fiwareServicePath;
+	private String subscriptionDescription;
+	private String subscriptionIdPattern;
+	private String subscriptionDuration;
+	private String subscriptionNotificationUrl;
+	
+	public Subscriber(){
+		
+		log.debug("Getting configuration parameters from configFile");
+		
+		try {
+			configFile = new ConfigFile(filePath);
+			
+			contextBrokerIP = configFile.getStringParam("contextBroker.ip");
+			
+			if(contextBrokerIP==null || contextBrokerIP.isEmpty()){
+				contextBrokerIP="localhost";
+				log.warn("No entry found for 'contextBroker.ip' in configure file. "+contextBrokerIP+"set by default");
+			}
+			
+			contextBrokerPort = configFile.getStringParam("contextBroker.port");
+			
+			if(contextBrokerPort==null || contextBrokerPort.isEmpty()){
+				contextBrokerPort="1026";
+				log.warn("No entry found for 'contextBroker.port' in configure file. "+contextBrokerPort+"set by default");
+			}			
+			
+			subscriptionUrl = contextBrokerIP+":"+contextBrokerPort+"/v2/subscriptions";
+			log.debug("Subscription url: "+subscriptionUrl);
+			
+			fiwareService = configFile.getStringParam("fiware.service");
+			
+			if(fiwareService==null || fiwareService.isEmpty()){
+				fiwareService="service";
+				log.warn("No entry found for 'fiware.service' in configure file. "+fiwareService+"set by default");
+			}
+			
+			log.debug("Fiware Service: "+fiwareService);
+			fiwareServicePath = configFile.getStringParam("fiware.servicePath");
+			
+			if(fiwareServicePath==null || fiwareServicePath.isEmpty()){
+				fiwareServicePath="fiwareServicePath";
+				log.warn("No entry found for 'fiware.servicePath' in configure file. "+fiwareServicePath+"set by default");
+			}			
+			
+			log.debug("FiwareServicePath: "+fiwareServicePath);
+			
+			subscriptionDescription = configFile.getStringParam("subscription.description");
+			
+			if(subscriptionDescription==null || subscriptionDescription.isEmpty()){
+				subscriptionDescription="none";
+				log.warn("No entry found for 'subscription.description' in configure file. "+subscriptionDescription+"set by default");
+			}
+			
+			log.debug("Subscription description: "+subscriptionDescription);
+			subscriptionIdPattern = configFile.getStringParam("subscription.idPattern");
+			
+			if(subscriptionIdPattern==null || subscriptionIdPattern.isEmpty()){
+				subscriptionIdPattern=".*";
+				log.warn("No entry found for 'subscription.idPattern' in configure file. "+subscriptionIdPattern+"set by default");
+			}			
+			
+			log.debug("Subscription IdPattern: "+subscriptionIdPattern);
+			subscriptionDuration = configFile.getStringParam("subscription.duration");
+			
+			if(subscriptionDuration==null || subscriptionDuration.isEmpty()){
+				subscriptionDuration="P36M";
+				log.warn("No entry found for 'subscription.duration' in configure file. "+subscriptionDuration+"set by default");
+			}
+			
+			log.debug("Subscription duration: "+subscriptionDuration);
+			subscriptionNotificationUrl = configFile.getStringParam("subscription.notificationUrl");
+			
+			if(subscriptionIdPattern==null || subscriptionIdPattern.isEmpty()){
+				subscriptionIdPattern=".*";
+				log.warn("No entry found for 'subscription.idPattern' in configure file. "+subscriptionIdPattern+"set by default");
+			}			
+			
+			log.debug("Subscription IdPattern: "+subscriptionIdPattern);
+			
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		
+	}
+	
+	public boolean subscribe(){
+		
+		boolean succeed = false;
+		
+		
+		
+		return succeed;
+		
+	}
+
+}

@@ -1,0 +1,53 @@
+
+
+import java.time.Duration;
+
+public class Body {
+
+	private String description;
+	private Subject subject;
+	private String duration;
+	private Notification notification;
+	
+	public Body(){
+		description = null;
+		subject = new Subject();
+		duration = null;
+		notification = new Notification();
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+
+	public Notification getNotification() {
+		return notification;
+	}
+
+	public void setNotification(Notification notification) {
+		this.notification = notification;
+	}
+	
+	
+	
+}

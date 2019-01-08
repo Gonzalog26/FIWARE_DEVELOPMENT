@@ -1,0 +1,11 @@
+package publishMessageModel;
+
+public class PublishMessagesModel {
+
+	
+	public PublishMessagesModel(){
+		
+		
+	}
+	
+}

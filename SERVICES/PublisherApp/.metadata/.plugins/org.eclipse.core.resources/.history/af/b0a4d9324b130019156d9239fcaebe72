@@ -1,0 +1,15 @@
+package ids.publisherApp.server;
+
+import java.util.ArrayList;
+
+public class Entities {
+
+	private ArrayList<String> idPattern;
+	
+	public void Entities(){
+		
+		idPattern = new ArrayList<>();
+		
+	}
+	
+}

@@ -1,0 +1,15 @@
+package ids.publisherApp.server;
+
+public class SubscriptionBody {
+
+	private String description;
+	private Entities entities;	
+	private String duration;
+	
+	public void SubscriptionBody(){
+		
+		
+		
+	}
+	
+}

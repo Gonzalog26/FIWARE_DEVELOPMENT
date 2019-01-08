@@ -1,0 +1,6 @@
+fiware.service=temperature
+fiware.servicePath=/temperature
+body.description=The demo subscription to get info
+body.idPattern=.*
+body.duration=P36M
+body.url=http://172.18.2.7:8080/ids.publisherApp.rest/PublisherApp/publishMessage

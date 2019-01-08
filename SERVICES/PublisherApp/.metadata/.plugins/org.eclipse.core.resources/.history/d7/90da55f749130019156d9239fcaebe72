@@ -1,0 +1,150 @@
+package ids.publisherApp.server;
+
+import java.io.IOException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import es.tekniker.eefrmwrk.config.ConfigFile;
+
+public class Subscriber {
+	
+	private static final Log log = LogFactory.getLog(Subscriber.class);
+	
+	ConfigFile configFile;
+	String filePath="Subscription.properties";
+	
+	private String contextBrokerIP;
+	private String contextBrokerPort;
+	private String subscriptionUrl;
+	private String fiwareService;
+	private String fiwareServicePath;
+	private String subscriptionDescription;
+	private String subscriptionIdPattern;
+	private String subscriptionDuration;
+	private String subscriptionNotificationUrl;
+	
+	public Subscriber(){
+		
+		log.debug("Getting configuration parameters from configFile");
+		
+		try {
+			configFile = new ConfigFile(filePath);
+			
+			contextBrokerIP = configFile.getStringParam("contextBroker.ip");
+			
+			if(contextBrokerIP==null || contextBrokerIP.isEmpty()){
+				contextBrokerIP="localhost";
+				log.warn("No entry found for 'contextBroker.ip' in configure file. "+contextBrokerIP+"set by default");
+			}
+			
+			contextBrokerPort = configFile.getStringParam("contextBroker.port");
+			
+			if(contextBrokerPort==null || contextBrokerPort.isEmpty()){
+				contextBrokerPort="1026";
+				log.warn("No entry found for 'contextBroker.port' in configure file. "+contextBrokerPort+"set by default");
+			}			
+			
+			subscriptionUrl = contextBrokerIP+":"+contextBrokerPort+"/v2/subscriptions";
+			log.debug("Subscription url: "+subscriptionUrl);
+			
+			fiwareService = configFile.getStringParam("fiware.service");
+			
+			if(fiwareService==null || fiwareService.isEmpty()){
+				fiwareService="service";
+				log.warn("No entry found for 'fiware.service' in configure file. "+fiwareService+"set by default");
+			}
+			
+			log.debug("Fiware Service: "+fiwareService);
+			fiwareServicePath = configFile.getStringParam("fiware.servicePath");
+			
+			if(fiwareServicePath==null || fiwareServicePath.isEmpty()){
+				fiwareServicePath="fiwareServicePath";
+				log.warn("No entry found for 'fiware.servicePath' in configure file. "+fiwareServicePath+"set by default");
+			}			
+			
+			log.debug("FiwareServicePath: "+fiwareServicePath);
+			
+			subscriptionDescription = configFile.getStringParam("subscription.description");
+			
+			if(subscriptionDescription==null || subscriptionDescription.isEmpty()){
+				subscriptionDescription="none";
+				log.warn("No entry found for 'subscription.description' in configure file. "+subscriptionDescription+"set by default");
+			}
+			
+			log.debug("Subscription description: "+subscriptionDescription);
+			subscriptionIdPattern = configFile.getStringParam("subscription.idPattern");
+			
+			if(subscriptionIdPattern==null || subscriptionIdPattern.isEmpty()){
+				subscriptionIdPattern=".*";
+				log.warn("No entry found for 'subscription.idPattern' in configure file. "+subscriptionIdPattern+"set by default");
+			}			
+			
+			log.debug("Subscription IdPattern: "+subscriptionIdPattern);
+			subscriptionDuration = configFile.getStringParam("subscription.duration");
+			
+			if(subscriptionDuration==null || subscriptionDuration.isEmpty()){
+				subscriptionDuration="P36M";
+				log.warn("No entry found for 'subscription.duration' in configure file. "+subscriptionDuration+"set by default");
+			}
+			
+			log.debug("Subscription duration: "+subscriptionDuration);
+			subscriptionNotificationUrl = configFile.getStringParam("subscription.notificationUrl");
+			
+			if(subscriptionNotificationUrl==null || subscriptionNotificationUrl.isEmpty()){
+				subscriptionNotificationUrl=".*";
+				log.warn("No entry found for 'subscription.notificationUrl' in configure file. "+subscriptionNotificationUrl+"set by default");
+			}			
+			
+			log.debug("Subscription notificationUrl: "+subscriptionNotificationUrl);
+			
+			log.debug("Config params set!");		
+			
+			
+		} catch (IOException e) {
+			log.error("Error while getting config params");
+		}		
+		
+	}
+	
+	public boolean subscribe(){
+		
+		boolean succeed = false;
+		
+		  Thread t = new Thread() {
+			     public void run() {
+			        Looper.prepare(); //For Preparing Message Pool for the childThread
+			        HttpClient client = new DefaultHttpClient();
+			        HttpConnectionParams.setConnectionTimeout(client.getParams(), 1000); //Timeout Limit
+			        HttpResponse response;
+			        JSONObject json = new JSONObject();
+
+			            try {
+			                HttpPost post = new HttpPost("http://192.168.0.44:80");
+			                json.put("play", play);
+			                json.put("Properties", prop);
+			                StringEntity se = new StringEntity(json.toString());
+			                se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+			                post.setEntity(se);
+			                response = client.execute(post);
+
+			                /*Checking response */
+			                if (response != null) {
+			                    InputStream in = response.getEntity().getContent(); //Get the data in the entity
+			                }
+
+			            } catch (Exception e) {
+			                e.printStackTrace();
+			                showMessage("Error", "Cannot Estabilish Connection");
+			            }
+
+			            Looper.loop(); //Loop in the message queue
+			        }
+			    };
+			    t.start();
+		
+		return succeed;
+		
+	}
+
+}

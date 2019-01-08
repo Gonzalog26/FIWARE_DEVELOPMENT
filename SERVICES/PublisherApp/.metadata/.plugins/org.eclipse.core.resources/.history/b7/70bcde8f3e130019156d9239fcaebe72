@@ -1,0 +1,20 @@
+package ids.publisherApp.server;
+
+public class Subscriber {
+	
+	public Subscriber(){
+		
+		
+	}
+	
+	public boolean subscribe(){
+		
+		boolean succeed = false;
+		
+		
+		
+		return succeed;
+		
+	}
+
+}

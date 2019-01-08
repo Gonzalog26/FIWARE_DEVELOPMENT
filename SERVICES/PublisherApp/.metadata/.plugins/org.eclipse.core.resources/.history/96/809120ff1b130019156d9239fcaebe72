@@ -1,0 +1,21 @@
+package ids.publisherApp.server;
+
+public class Publisher {
+	
+	private static final Log log = LogFactory.getLog(Publisher.class);
+
+	public Publisher(){
+		
+	}
+	
+	public boolean publishMessage(String message){
+		
+		boolean succeed = true;
+		
+		
+		
+		return succeed;
+				
+	}
+	
+}

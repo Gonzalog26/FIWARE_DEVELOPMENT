@@ -23,17 +23,17 @@ config.idm = {
 }
 
 config.app = {
-	host: (process.env.PEP_PROXY_APP_HOST ||  '172.18.2.3'),
-	port: (process.env.PEP_PROXY_APP_PORT || '4041'),
+	host: (process.env.PEP_PROXY_APP_HOST ||  '172.18.2.4'),
+	port: (process.env.PEP_PROXY_APP_PORT || '1026'),
 	ssl: toBoolean(process.env.PEP_PROXY_APP_SSL_ENABLED, false) // Use true if the app server listens in https
 }
 
 
 // Credentials obtained when registering PEP Proxy in app_id in Account Portal
 config.pep = {
-	app_id: (process.env.PEP_PROXY_APP_ID || '3b5496bc-9dfb-49cc-9d77-1224cecb6125'),
-	username: (process.env.PEP_PROXY_USERNAME ||'pep_proxy_d4c156b3-cafc-4b41-8203-71e11fc62adf'),
-	password: (process.env.PEP_PASSWORD ||'pep_proxy_205a52bb-b8e4-4296-863c-af2c986f0b18'),
+	app_id: (process.env.PEP_PROXY_APP_ID || '4b5fa974-0bde-4f3e-81ec-2e6871ff848e'),
+	username: (process.env.PEP_PROXY_USERNAME ||'pep_proxy_fbf6b9af-417e-4d9e-ad15-a2e9ae4af86f'),
+	password: (process.env.PEP_PASSWORD ||'pep_proxy_548b175d-2af9-465e-8fd5-c32599aa0b2b'),
 	token: {
 		secret: ''   // Secret must be configured in order validate a jwt
 	},

@@ -1,0 +1,5 @@
+package ids.publisherApp.api;
+
+public interface IidsManagerRest {
+
+}

@@ -1,0 +1,47 @@
+package ids.publisherApp.server;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import es.tekniker.eefrmwrk.config.ConfigFile;
+
+public class Subscriber {
+	
+	private static final Log log = LogFactory.getLog(Subscriber.class);
+	
+	ConfigFile configFile;
+	String filePath="Subscription.properties";
+	
+	private String fiwareService;
+	private String fiwareServicePath;
+	private String subscriptionDescription;
+	private String subscriptionIdPatter;
+	private String subscriptionDuration;
+	private String subscriptionUrl;
+	
+	public Subscriber(){
+		
+		log.debug("Getting configuration parameters from configFile");
+		
+		configFile = new ConfigFile(filePath);
+		
+		host = configFile.getStringParam("mqtt.host");
+		
+		if(host==null || host.isEmpty()){
+			host="localhost";
+			log.warn("No entry found for 'host' in configure file. Host "+host+"set by default");
+		}
+		
+	}
+	
+	public boolean subscribe(){
+		
+		boolean succeed = false;
+		
+		
+		
+		return succeed;
+		
+	}
+
+}

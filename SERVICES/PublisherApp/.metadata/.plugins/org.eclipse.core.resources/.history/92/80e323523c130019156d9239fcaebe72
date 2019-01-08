@@ -1,0 +1,11 @@
+mqtt.port=8883
+mqtt.topic=LivingLab/variables
+mqtt.qos=1
+mqtt.publisher1=sigfoxPublisher
+mqtt.authenabled=true
+mqtt.userName=SigfoxPublisher
+mqtt.passwd=Sii206744+
+ssl.certsenabled=true
+ssl.cacert=/home/tomcatlogs/Certificados/certAuth/cacert.pem
+ssl.cert=/home/tomcatlogs/Certificados/sigfoxPublisher/cert.pem
+ssl.key=/home/tomcatlogs/Certificados/sigfoxPublisher/key.pem

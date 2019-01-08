@@ -1,0 +1,11 @@
+package ids.CBModel;
+
+public class PublishMessagesModel {
+
+	
+	public PublishMessagesModel(){
+		
+		
+	}
+	
+}

@@ -23,7 +23,7 @@
 var config = {};
 
 config.mqtt = {
-    host: 'mosquitto',
+    host: '172.18.2.2',
     port: 1883,
     username: 'ids',
     password: 'ids',
@@ -34,9 +34,9 @@ config.mqtt = {
 };
 
 config.iota = {
-    logLevel: 'FATAL',
+    logLevel: 'DEBUG',
     contextBroker: {
-        host: 'orion',
+        host: '172.18.2.4',
         port: '1026'
     },
     server: {
@@ -46,7 +46,7 @@ config.iota = {
         type: 'mongodb'
     },
     mongodb: {
-        host: 'mongo',
+        host: '172.18.2.6',
         port: '27017',
         db: 'iotagent',
         retries: 5,
